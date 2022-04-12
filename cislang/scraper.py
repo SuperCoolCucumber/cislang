@@ -5,6 +5,9 @@ from bs4 import BeautifulSoup
 import re
 import pandas as pd
 from joblib import Parallel, delayed
+import sys
+
+sys.setrecursionlimit(30000)
 
 class Scraper:
     def get_links(self, url: str) -> List[str]:
@@ -75,10 +78,10 @@ class WikiScraper(Scraper):
 
             if re.findall('wgWikibaseItemId":\n"(\w+)"', scr):
                 id_ = re.findall('wgWikibaseItemId":\n"(\w+)"', scr)
-                return id_[0]
+                return str(id_[0])
             elif re.findall('wgWikibaseItemId":"(\w+)"', scr):
                 id_ = re.findall('wgWikibaseItemId":"(\w+)"', scr)
-                return id_[0]   
+                return str(id_[0])   
         return list(
             filter(
                 lambda x: True if x else False,
@@ -88,8 +91,8 @@ class WikiScraper(Scraper):
 
 
 
-    def get_url(id_):
-     return f"https://www.wikidata.org/wiki/Special:EntityData/{id_}.json"
+    def get_url(self, id_):
+        return f"https://www.wikidata.org/wiki/Special:EntityData/{id_}.json"
 
 
     def get_link(self, soup, lang):
@@ -131,6 +134,7 @@ class WikiScraper(Scraper):
     def build_array(self, ids):
     
         def inner_build_array(id_):
+            
             arr = []
             req = requests.get(self.get_url(id_)).json()
             langs = req["entities"][id_]["labels"]
