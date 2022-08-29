@@ -13,6 +13,6 @@ ids = WikiScraper().collect_ids(links)
 arr = WikiScraper().build_array(ids)
 WikiScraper().build_df(arr)
 
-ka_df = pd.read_csv('/home/daria/cislang/ka_df.csv', index_col=0)
+ka_df = pd.read_csv('~/cislang/ka_df.csv', index_col=0)
 ka_df = filter1(ka_df)
-ka_df = filter2(ka_df)
+filter2(ka_df)
